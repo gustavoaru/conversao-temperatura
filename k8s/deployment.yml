@@ -1,0 +1,35 @@
+# Deployment da aplicação Conversão Temperatura
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: gdcosta/conversao-temperatura:v1        
+          ports:
+            - containerPort: 8080
+
+---
+# Service para exporta aplicação Web
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80            # Porta local
+    targetPort: 8080    # Porta do serviço
+    nodePort: 30000     # Porta do bind com o kind
+  type: NodePort
